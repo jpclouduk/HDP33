@@ -1,10 +1,8 @@
-1234567890
-1234567890
-1234567890
-1234567890
-1234567890
-1234567890
-1234567890
-1234567890
-1234567890
-1234567890
+---
+- name: Hello World!
+  hosts: all
+
+  tasks:
+
+  - name: Hello World!
+    shell: echo "Hi! Tower is working!"
