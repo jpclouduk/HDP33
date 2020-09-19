@@ -3,15 +3,15 @@
 - name: Build HDP3.3
   gather_facts: false
 
-    tasks:
+  tasks:
 
-      - name: Install Java 11 and Jenkins
-        hosts: all
-        yum:
-          name: "{{packages}}"
-          state: latest
-        vars:
-          packages:
-          - java-11-openjdk-devel
-        become: yes
-        become_user: root
+    - name: Install Java 11 and Jenkins
+      hosts: all
+      yum:
+        name: "{{packages}}"
+        state: latest
+      vars:
+        packages:
+        - java-11-openjdk-devel
+      become: yes
+      become_user: root
