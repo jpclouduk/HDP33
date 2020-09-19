@@ -2,6 +2,7 @@
 
 - name: Upgrade and add required base packages
   gather_facts: false
+  hosts: all
   tasks:
 
     - name: upgrade all packages
