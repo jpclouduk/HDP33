@@ -2,9 +2,10 @@
 
 - name: Build HDP3.3
   gather_facts: false
-
-  tasks:
   hosts: all
+  
+  tasks:
+
     - name: Install Java 11 and Jenkins
       yum:
         name: "{{packages}}"
