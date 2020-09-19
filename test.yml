@@ -1,6 +1,7 @@
 ---
 - name: Hello World!
   hosts: all
+  become: yes
 
   tasks:
 
