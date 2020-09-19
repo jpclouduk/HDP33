@@ -4,9 +4,8 @@
   gather_facts: false
 
   tasks:
-
+  hosts: all
     - name: Install Java 11 and Jenkins
-      hosts: all
       yum:
         name: "{{packages}}"
         state: latest
