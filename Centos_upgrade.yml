@@ -1,0 +1,12 @@
+---
+
+- name: Upgrade and add required base packages
+  gather_facts: false
+  tasks:
+
+    - name: upgrade all packages
+      yum:
+        name: '*'
+        state: latest
+      become: yes
+      become_user: root
