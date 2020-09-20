@@ -49,8 +49,15 @@
 
     - name: Set permissions on hadoop ssh keys
       file:
-        path: /home/hadoop/.ssh/
+        path: /home/hadoop/.ssh
         owner: hadoop
         group: hadoop
         recurse: yes
         mode: '0600'
+    
+    - name: Set permissions on hadoop ssh dir
+      file:
+        path: /home/hadoop/.ssh
+        owner: hadoop
+        group: hadoop
+        mode: '0700'    
