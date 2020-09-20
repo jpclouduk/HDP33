@@ -29,7 +29,7 @@
     
     - name: Push keys to nodes
       shell:
-        cmd: scp -r .ssh {{ item }}/home/hadoop/
+        cmd: scp -r .ssh {{ item }}:/home/hadoop/
         chdir: /home/hadoop
       loop:
         - node1
