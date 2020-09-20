@@ -46,7 +46,7 @@
   tasks:
 
     - name: Set permissions on hadoop ssh keys
-      copy:
+      file:
         path: /home/hadoop/.ssh
         state: directory
         recurse: yes
