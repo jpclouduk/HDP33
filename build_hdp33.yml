@@ -18,6 +18,7 @@
   become: yes
   tasks:
     - name: Create directory on master
-      path: /opt/hadoop
-      state: directory
-      mode: '755'
+      file:
+        path: /opt/hadoop
+        state: directory
+        mode: '755'
