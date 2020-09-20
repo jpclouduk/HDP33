@@ -51,5 +51,7 @@
       file:
         path: /home/hadoop/.ssh/*
         state: directory
+        owner: hadoop
+        group: hadoop
         recurse: yes
         mode: '0600'
