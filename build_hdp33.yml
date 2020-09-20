@@ -43,6 +43,12 @@
         owner: hadoop
         group: hadoop
 
+    -name: Get Hadoop
+     get_url:
+       url: https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz
+       dest: /var/tmp/
+       checksum: sha512:https://downloads.apache.org/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz.sha512
+
 - hosts: all
   become: yes
   tasks:
@@ -60,4 +66,6 @@
         path: /home/hadoop/.ssh
         owner: hadoop
         group: hadoop
-        mode: '0700'    
+        mode: '0700'
+
+
