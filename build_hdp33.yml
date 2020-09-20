@@ -5,12 +5,12 @@
   hosts: all
   become: yes
   tasks:
-    -name: Create hadoop user
-     user:
-       name: hadoop
-       generate_ssh_key: yes
-       ssh_key_bits: 4096
-       ssh_key_file: .ssh/id_rsa
+    - name: Create hadoop user
+      user:
+        name: hadoop
+        generate_ssh_key: yes
+        ssh_key_bits: 4096
+        ssh_key_file: .ssh/id_rsa
 
     - name: Install Java 11 and Jenkins
       yum:
@@ -23,14 +23,13 @@
 - hosts: master
   become: yes
   tasks:
-
-    -name: Create authorized_keys file
-     copy:
-       src: /home/hadoop/.ssh/id_rsa.pub
-       dest: /home/hadoop/.ssh/authorized_keys
-       owner: hadoop
-       group: hadoop
-       mode: '0600'
+    - name: Create authorized_keys file
+      copy:
+        src: /home/hadoop/.ssh/id_rsa.pub
+        dest: /home/hadoop/.ssh/authorized_keys
+        owner: hadoop
+        group: hadoop
+        mode: '0600'
     
     -name: Push keys to nodes
      shell:
