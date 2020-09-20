@@ -40,6 +40,8 @@
         path: /opt/hadoop
         state: directory
         mode: '755'
+        owner: hadoop
+        group: hadoop
 
 - hosts: all
   become: yes
@@ -47,7 +49,7 @@
 
     - name: Set permissions on hadoop ssh keys
       file:
-        path: /home/hadoop/.ssh
+        path: /home/hadoop/.ssh/*
         state: directory
         recurse: yes
         mode: '0600'
