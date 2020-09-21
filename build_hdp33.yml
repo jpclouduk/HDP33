@@ -54,7 +54,6 @@
       register: hdp_checksum
 
     - debug:
-        var: hdp_checksum
         msg: "{{ hdp_checksum['content'] | b64decode }}"
 
     - name: Get Hadoop distribution
