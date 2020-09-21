@@ -67,11 +67,11 @@
         dest: /var/tmp
         remote_src: yes
 
-    -name: Move distribution to /opt
-     copy:
-       remote_src: yes
-       src: /var/tmp/hadoop-3.3.0
-       dest: /opt/hadoop
+    - name: Move distribution to /opt
+      copy:
+        remote_src: yes
+        src: /var/tmp/hadoop-3.3.0
+        dest: /opt/hadoop
 
 
 - hosts: all
