@@ -35,7 +35,7 @@
         - node1
         - node2
 
-    - name: Create directory on master
+    - name: Create /opt/hadoop on master
       file:
         path: /opt/hadoop
         state: directory
@@ -60,6 +60,14 @@
         checksum: "sha512:{{ hdp_checksum.split( )[3] }}"
       vars:
         hdp_checksum: '{{ hdp_checksum64.content | b64decode }}'
+
+    - name: Push keys to nodes
+      shell:
+        cmd: tar -xf /var/tmp/hadoop-3.3.0.tar.gz ; mv /var/tmp/hadoop-3.3.0
+        chdir: /home/hadoop
+      loop:
+        - node1
+        - node2
 
     - name: Unpack hadoop  distribution
       unarchive:
