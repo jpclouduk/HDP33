@@ -54,7 +54,7 @@
       register: hdp_checksum64
 
     - debug:
-        msg: '{{ hdp_checksum64 }}'
+        msg: '{{ hdp_checksum64[0] }}'
 
     - name: Get Hadoop distribution
       get_url: 
