@@ -17,7 +17,7 @@
       register: hdp_checksum64
 
     - debug:
-        var: hdp_checksum64.content
+        var: hdp_checksum64.content | b64decode
 
     - name: Get Hadoop distribution
       get_url: 
@@ -27,4 +27,4 @@
 #        checksum: sha512:9ac5a5a8d29de4d2edfb5e554c178b04863375c5644d6fea1f6464ab4a7e22a50a6c43253ea348edbd114fc534dcde5bdd2826007e24b2a6b0ce0d704c5b4f5b
 #        checksum: sha512:https://downloads.apache.org/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz.sha512
       vars:
-        hdp_checksum: '{{ hdp_checksum64.content | b64decode | split( )[3] }}'
+        hdp_checksum: '{{ hdp_checksum64.content | b64decode }}'
