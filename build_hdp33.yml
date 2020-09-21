@@ -45,7 +45,7 @@
 
     - name: Get Hadoop
       get_url:
-        url: http://mirror.ox.ac.uk/sites/rsync.apache.org/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz
+        url: https://downloads.apache.org/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz
         dest: /var/tmp/
         checksum: sha512:9ac5a5a8d29de4d2edfb5e554c178b04863375c5644d6fea1f6464ab4a7e22a50a6c43253ea348edbd114fc534dcde5bdd2826007e24b2a6b0ce0d704c5b4f5b
 #        checksum: sha512:https://downloads.apache.org/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz.sha512
