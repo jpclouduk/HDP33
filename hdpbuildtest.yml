@@ -2,7 +2,7 @@
 
 - name: Build HDP3.3
   gather_facts: false
-  hosts: all
+  hosts: master
   become: yes
   tasks:
   
