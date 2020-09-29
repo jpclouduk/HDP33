@@ -61,25 +61,21 @@
       vars:
         hdp_checksum: '{{ hdp_checksum64.content | b64decode }}'
 
-    - name: Push keys to nodes
-      shell:
-        cmd: tar -xf /var/tmp/hadoop-3.3.0.tar.gz ; mv /var/tmp/hadoop-3.3.0
-        chdir: /home/hadoop
-      loop:
-        - node1
-        - node2
-
-    - name: Unpack hadoop  distribution
+    - name: Unpack hadoop distribution
       unarchive:
         src: /var/tmp/hadoop-3.3.0.tar.gz
-        dest: /var/tmp
+        dest: /opt
+        owner: hadoop
+        group: hadoop
         remote_src: yes
 
-    - name: Move distribution to /opt
-      copy:
-        remote_src: yes
-        src: /var/tmp/hadoop-3.3.0
+    - name: Create Hadoop Version Symlink
+      file:
+        src: /opt/hadoop-3.3.0
         dest: /opt/hadoop
+        owner: hadoop
+        group: hadoop
+        state: link
 
 
 - hosts: all
