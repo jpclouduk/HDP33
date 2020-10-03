@@ -124,7 +124,7 @@
         group: hadoop
         mode: '0700'
   
-      - name: Set permissions on hadoop build
+    - name: Set permissions on hadoop build
       file:
         path: /opt/hadoop
         owner: hadoop
