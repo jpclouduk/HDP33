@@ -12,13 +12,13 @@
         ssh_key_bits: 4096
         ssh_key_file: .ssh/id_rsa
 
-#    - name: Install Java 11
-#      yum:
-#        name: "{{packages}}"
-#        state: latest
-#      vars:
-#        packages:
-#        - java-11-openjdk-devel
+    - name: Install Java 11
+      yum:
+        name: "{{packages}}"
+        state: latest
+      vars:
+        packages:
+        - java-11-openjdk-devel
 
 
 - hosts: master
