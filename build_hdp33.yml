@@ -96,6 +96,11 @@
         url: https://raw.githubusercontent.com/jpclouduk/HDP33/master/config/yarn-site.xml
         dest: /opt/hadoop/etc/hadoop/yarn-site.xml
 
+    - name: Update workers file
+      get_url:
+        url: https://raw.githubusercontent.com/jpclouduk/HDP33/master/config/workers
+        dest: /opt/hadoop/etc/hadoop/workers
+
     - name: Push hadoop build to workers
       shell:
         cmd: scp -r hadoop {{ item }}:/opt/
