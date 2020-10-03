@@ -1,0 +1,42 @@
+ hosts: master
+  become: yes
+  become_user: hadoop
+  tasks:
+
+    - name: Get book alice.txt
+      get_url:
+        url: https://www.gutenberg.org/files/11/11-0.txt
+        dest: /home/hadoop/alice.txt
+        validate_certs: no
+
+    - name: Get book alice.txt
+      get_url:
+        url: https://www.gutenberg.org/files/1661/1661-0.txt
+        dest: /home/hadoop/holmes.txt
+        validate_certs: no
+
+    - name: Get book alice.txt
+      get_url:
+        url: https://www.gutenberg.org/files/84/84-0.txt
+        dest: frankenstein.txt
+        validate_certs: no
+
+    - name: Create hdfs:///user/hadoop
+      shell:
+        cmd: source /home/hadoop/.bashrc && hdfs dfs -mkdir books
+      args:
+        executable: /bin/bash
+
+    - name: Push files to books folder
+      shell:
+        chdir: /home/hadoop
+        cmd: source /home/hadoop/.bashrc && hdfs dfs -put alice.txt holmes.txt frankenstein.txt books
+
+      args:
+        executable: /bin/bash
+
+    - name: Push files to books folder
+      shell:
+        cmd: source /home/hadoop/.bashrc && yarn jar /opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.0.jar wordcount "books/*" output
+      args:
+        executable: /bin/bash
