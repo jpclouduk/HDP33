@@ -1,0 +1,17 @@
+# Memory settings 
+
+--- 2GB NODE
+yarn.nodemanager.resource.memory-mb	1536
+yarn.scheduler.maximum-allocation-mb	1536
+yarn.scheduler.minimum-allocation-mb	128
+yarn.app.mapreduce.am.resource.mb	512
+mapreduce.map.memory.mb	256
+mapreduce.reduce.memory.mb	256
+
+--- 8GB NODE
+yarn.nodemanager.resource.memory-mb	6144
+yarn.scheduler.maximum-allocation-mb	6144
+yarn.scheduler.minimum-allocation-mb	512
+yarn.app.mapreduce.am.resource.mb	2048
+mapreduce.map.memory.mb	1024
+mapreduce.reduce.memory.mb	1024

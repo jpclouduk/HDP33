@@ -12,13 +12,14 @@
         ssh_key_bits: 4096
         ssh_key_file: .ssh/id_rsa
 
-    - name: Install Java 11 and Jenkins
-      yum:
-        name: "{{packages}}"
-        state: latest
-      vars:
-        packages:
-        - java-11-openjdk-devel
+#    - name: Install Java 11
+#      yum:
+#        name: "{{packages}}"
+#        state: latest
+#      vars:
+#        packages:
+#        - java-11-openjdk-devel
+
 
 - hosts: master
   become: yes
@@ -69,6 +70,17 @@
         group: hadoop
         state: link
 
+    - name: Update Hadoop Java path
+      lineinfile:
+        path: /opt/hadoop/etc/hadoop/hadoop-env.sh
+        regexp: 'export JAVA_HOME'
+        line: export JAVA_HOME=/usr/lib/jvm/jre-11
+
+    - name: Update core-site.xml
+      get_url:
+        url: https://downloads.apache.org/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz.sha512
+        dest: /var/tmp/
+
 
 - hosts: all
   become: yes
@@ -89,21 +101,29 @@
         group: hadoop
         mode: '0700'
 
+    - name: Create hadoop data directory
+      file:
+        path: /data
+        state: directory
+        owner: hadoop
+        group: hadoop
+        mode: '0755'
+
     - name: Setup hadoop PATH
       lineinfile:
-        path: /home/hadoop/.bash_profile
+        path: /home/hadoop/.bashrc
         regexp: '^PATH='
         line: PATH=/opt/hadoop/bin:/opt/hadoop/sbin:$PATH
 
     - name: Setup HADOOP_HOME
       lineinfile:
-        path: /home/hadoop/.bash_profile
+        path: /home/hadoop/.bashrc
         regexp: '^HADOOP_HOME='
         line: HADOOP_HOME=/opt/hadoop
 
     - name: Setup Export
       lineinfile:
-        path: /home/hadoop/.bash_profile
+        path: /home/hadoop/.bashrc
         regexp: '^export'
         line: export PATH HADOOP_HOME
 
