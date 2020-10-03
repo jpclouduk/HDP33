@@ -166,12 +166,13 @@
 
 - hosts: master
   become: yes
+  become_user: hadoop
   tasks:
 
     - name: Format hdfs
       shell:
-        cmd: /bin/su -c "hdfs namenode - format" - hadoop
+        cmd: hdfs namenode - format
 
     - name: Start hadoop
       shell:
-        cmd: /bin/su -c "start-dfs.sh" - hadoop
+        cmd: start-dfs.sh
