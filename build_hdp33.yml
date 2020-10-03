@@ -127,6 +127,7 @@
     - name: Set permissions on hadoop build
       file:
         path: /opt/hadoop
+        state: directory
         owner: hadoop
         group: hadoop
         recurse: yes
