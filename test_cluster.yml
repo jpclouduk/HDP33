@@ -37,7 +37,7 @@
       args:
         executable: /bin/bash
 
-    - name: Push files to books folder
+    - name: Run mapreduce job against ingested files
       shell:
         cmd: source /home/hadoop/.bashrc && yarn jar /opt/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.0.jar wordcount "books/*" output
       args:
