@@ -97,4 +97,21 @@
         group: hadoop
         mode: '0700'
 
+    -name: Setup hadoop PATH
+     lineinfile:
+       path: /home/hadoop/.bash_profile
+       regexp: '^PATH='
+       line: PATH=/opt/hadoop/bin:/opt/hadoop/sbin:$PATH
+
+    -name: Setup HADOOP_HOME
+     lineinfile:
+       path: /home/hadoop/.bash_profile
+       regexp: '^HADOOP_HOME='
+       line: HADOOP_HOME=/opt/hadoop
+
+    -name: Setup Export
+     lineinfile:
+       path: /home/hadoop/.bash_profile
+       regexp: '^export'
+       line: export PATH HADOOP_HOME
 
