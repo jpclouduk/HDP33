@@ -8,7 +8,8 @@
 #  - name: Hello World!
 #    shell: echo "Hi! Tower is working!"
 
-- hosts: master
+- name: Test sudo
+  hosts: master
   become: yes
   become_user: hadoop
   become method: sudo su -
