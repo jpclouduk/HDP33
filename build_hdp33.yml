@@ -167,6 +167,7 @@
 - hosts: master
   become: yes
   become_user: hadoop
+  become method: sudo su -
   tasks:
 
     - name: Format hdfs
