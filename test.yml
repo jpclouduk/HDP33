@@ -1,9 +1,23 @@
 ---
-- name: Hello World!
-  hosts: all
-  become: no
+#- name: Hello World!
+#  hosts: all
+#  become: no
 
+#  tasks:
+
+#  - name: Hello World!
+#    shell: echo "Hi! Tower is working!"
+
+- hosts: master
+  become: yes
+  become_user: hadoop
+  become method: sudo su -
   tasks:
 
-  - name: Hello World!
-    shell: echo "Hi! Tower is working!"
+    - name: Format hdfs
+      shell:
+        cmd: hdfs namenode -format
+
+    - name: Start hadoop
+      shell:
+        cmd: start-dfs.sh
