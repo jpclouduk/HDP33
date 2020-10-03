@@ -171,7 +171,7 @@
 
     - name: Format hdfs
       shell:
-        cmd: hdfs namenode - format
+        cmd: hdfs namenode -format
 
     - name: Start hadoop
       shell:
