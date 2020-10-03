@@ -3,13 +3,16 @@
   hosts: master
   become: yes
   become_user: hadoop
-  become_method: sudo su -
   tasks:
 
     - name: Format hdfs
       shell:
-        cmd: hdfs namenode -format
+        cmd: source /home/hadoop/.bashrc && hdfs namenode -format
+      args:
+        executable: /bin/bash
 
     - name: Start hadoop
       shell:
-        cmd: start-dfs.sh
+        cmd: source /home/hadoop/.bashrc && start-dfs.sh
+      args:
+        executable: /bin/bash
