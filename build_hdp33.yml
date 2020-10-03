@@ -165,10 +165,8 @@
 
     - name: Format hdfs
       shell:
-        cmd: /bin/su -c "hdfs namenode format" - hadoop
+        cmd: /bin/su -c "hdfs namenode - format" - hadoop
 
     - name: Start hadoop
       shell:
         cmd: /bin/su -c "start-dfs.sh" - hadoop
-
-
