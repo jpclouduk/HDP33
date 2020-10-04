@@ -22,7 +22,7 @@
 
     - name: Open ports for HDFS/MAPRED/HIVE/WEBHCAT (40K-52K)
       firewalld:
-        port: 40000-52000/tcp
+        port: 30000-52000/tcp
         zone: public
         permanent: yes
         immediate: yes
