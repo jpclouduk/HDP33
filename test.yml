@@ -8,4 +8,4 @@
       lineinfile:
         path: /etc/sudoers
         regexp: '^ansible ALL= (newuser)'
-        line: ansible ALL= (newuser) NOPASSWD: ALL
+        line: 'ansible ALL= (newuser) NOPASSWD: ALL'
