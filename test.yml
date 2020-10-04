@@ -2,7 +2,6 @@
 - name: Test sudo
   hosts: master
   become: yes
-  become_user: hadoop
   tasks:
 
     - name: Update Sudoers
