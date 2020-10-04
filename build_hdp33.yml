@@ -215,3 +215,9 @@
         cmd: source /home/hadoop/.bashrc && start-yarn.sh
       args:
         executable: /bin/bash
+
+    - name: Create hdfs:///user/hadoop
+      shell:
+        cmd: source /home/hadoop/.bashrc && hdfs dfs -mkdir -p /usr/hadoop
+      args:
+        executable: /bin/bash

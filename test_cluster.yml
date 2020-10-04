@@ -23,7 +23,7 @@
         dest: /home/hadoop/frankenstein.txt
         validate_certs: no
 
-    - name: Create hdfs:///user/hadoop
+    - name: Create hdfs:///user/hadoop/books
       shell:
         cmd: source /home/hadoop/.bashrc && hdfs dfs -mkdir books
       args:
