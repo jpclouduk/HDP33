@@ -20,7 +20,7 @@
         packages:
         - java-11-openjdk-devel
 
-    - name: Open ports for HDFS/MAPRED/HIVE/WEBHCAT I
+    - name: Open ports for HDFS/MAPRED/HIVE/WEBHCAT (50K-52K)
       firewalld:
         port: 50000-52000/tcp
         zone: public
@@ -28,7 +28,7 @@
         immediate: yes
         state: enabled
 
-    - name: Open ports for HDFS/MAPRED/HIVE/WEBHCAT I
+    - name: Open ports for HDFS/MAPRED/HIVE/WEBHCAT (8K-10K)
       firewalld:
         port: 8000-10000/tcp
         zone: public
