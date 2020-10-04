@@ -5,14 +5,8 @@
   become_user: hadoop
   tasks:
 
-    - name: Format hdfs
-      shell:
-        cmd: source /home/hadoop/.bashrc && hdfs namenode -format
-      args:
-        executable: /bin/bash
-
-    - name: Start hadoop
-      shell:
-        cmd: source /home/hadoop/.bashrc && start-dfs.sh
-      args:
-        executable: /bin/bash
+    - name: Update Sudoers
+      lineinfile:
+        path: /etc/sudoers
+        regexp: '^ansible ALL= (newuser)'
+        line: ansible ALL= (newuser) NOPASSWD: ALL

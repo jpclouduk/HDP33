@@ -36,6 +36,12 @@
         immediate: yes
         state: enabled
 
+    - name: Update Sudoers
+      lineinfile:
+        path: /etc/sudoers
+        regexp: '^ansible ALL= (hadoop)'
+        line: ansible ALL= (hadoop) NOPASSWD: ALL
+
 
 - hosts: master
   become: yes
