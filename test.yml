@@ -1,11 +1,13 @@
 ---
 - name: Test sudo
-  hosts: master
+  hosts: all
   become: yes
   tasks:
 
-    - name: Update Sudoers
-      lineinfile:
-        path: /etc/sudoers
-        regexp: '^ansible ALL= (newuser)'
-        line: 'ansible ALL= (newuser) NOPASSWD: ALL'
+    - name: Open ports for HDFS/MAPRED/HIVE/WEBHCAT (40K-52K)
+      firewalld:
+        port: 40000-52000/tcp
+        zone: public
+        permanent: yes
+        immediate: yes
+        state: enabled
