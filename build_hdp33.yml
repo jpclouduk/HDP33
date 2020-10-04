@@ -40,7 +40,7 @@
       lineinfile:
         path: /etc/sudoers
         regexp: '^ansible ALL= (hadoop)'
-        line: ansible ALL= (hadoop) NOPASSWD: ALL
+        line: 'ansible ALL= (hadoop) NOPASSWD: ALL'
 
 
 - hosts: master
