@@ -49,6 +49,13 @@
     - name: Create authorized_keys file
       shell:
         cmd: cp /home/hadoop/.ssh/id_rsa.pub /home/hadoop/.ssh/authorized_keys
+
+    - name: Push keys to nodes
+      shell:
+        cmd: ssh-keyscan -H {{ item }} >> /root/.ssh/known_hosts
+      loop:
+        - node1
+        - node2
     
     - name: Push keys to nodes
       shell:
