@@ -1,0 +1,306 @@
+---
+
+- name: Build HDP3.3 With Spark
+  gather_facts: false
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create hadoop user
+      user:
+        name: hadoop
+        generate_ssh_key: yes
+        ssh_key_bits: 4096
+        ssh_key_file: .ssh/id_rsa
+
+    - name: Install Java 11
+      yum:
+        name: "{{packages}}"
+        state: latest
+      vars:
+        packages:
+        - java-11-openjdk-devel
+
+    - name: Open ports for HDFS/MAPRED/HIVE/WEBHCAT (40K-52K)
+      firewalld:
+        port: 30000-52000/tcp
+        zone: public
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Open ports for HDFS/MAPRED/HIVE/WEBHCAT (8K-10K)
+      firewalld:
+        port: 8000-10000/tcp
+        zone: public
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Update Sudoers
+      lineinfile:
+        path: /etc/sudoers
+        regexp: '^ansible ALL= (hadoop)'
+        line: 'ansible ALL= (hadoop) NOPASSWD: ALL'
+
+
+- hosts: master
+  become: yes
+  tasks:
+    - name: Create authorized_keys file
+      shell:
+        cmd: cp /home/hadoop/.ssh/id_rsa.pub /home/hadoop/.ssh/authorized_keys
+
+    - name: Push keys to nodes
+      shell:
+        cmd: ssh-keyscan -H {{ item }} >> /root/.ssh/known_hosts
+      loop:
+        - node1
+        - node2
+    
+    - name: Push keys to nodes
+      shell:
+        cmd: scp -r .ssh {{ item }}:/home/hadoop/
+        chdir: /home/hadoop
+      loop:
+        - node1
+        - node2
+
+    - name: Get Hadoop distribution checksum
+      get_url:
+        url: https://downloads.apache.org/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz.sha512
+        dest: /var/tmp/
+
+    - name: Store Hadoop checksum
+      slurp:
+        src: /var/tmp/hadoop-3.3.0.tar.gz.sha512
+      register: hdp_checksum64
+
+    - name: Get Hadoop distribution
+      get_url: 
+        url: https://downloads.apache.org/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz
+        dest: /var/tmp/
+        checksum: "sha512:{{ hdp_checksum.split( )[3] }}"
+      vars:
+        hdp_checksum: '{{ hdp_checksum64.content | b64decode }}'
+
+    - name: Unpack hadoop distribution
+      unarchive:
+        src: /var/tmp/hadoop-3.3.0.tar.gz
+        dest: /opt
+        owner: hadoop
+        group: hadoop
+        remote_src: yes
+
+    - name: Create Hadoop Version Symlink
+      file:
+        src: /opt/hadoop-3.3.0
+        dest: /opt/hadoop
+        owner: hadoop
+        group: hadoop
+        state: link
+
+
+
+
+
+
+    - name: Get Spark distribution checksum
+      get_url:
+        url: https://downloads.apache.org/spark/spark-3.0.1/spark-3.0.1-bin-hadoop3.2.tgz.sha512
+        dest: /var/tmp/
+
+    - name: Store Spark checksum
+      slurp:
+        src: /var/tmp/spark-3.0.1-bin-hadoop3.2.tgz.sha512
+      register: spk_checksum64
+
+    - name: Get Hadoop distribution
+      get_url: 
+        url: https://downloads.apache.org/spark/spark-3.0.1/spark-3.0.1-bin-hadoop3.2.tgz
+        dest: /var/tmp/
+#        checksum: "sha512:{{ spk_checksum.split( )[3] }}"
+      vars:
+        spk_checksum: '{{ spk_checksum64.content | b64decode }}'
+
+    - name: Unpack spark distribution
+      unarchive:
+        src: /var/tmp/spark-3.0.1-bin-hadoop3.2.tgz
+        dest: /opt
+        owner: hadoop
+        group: hadoop
+        remote_src: yes
+
+    - name: Create spark Version Symlink
+      file:
+        src: /opt/spark-3.0.1-bin-hadoop3.2
+        dest: /opt/spark
+        owner: hadoop
+        group: hadoop
+        state: link
+
+
+
+
+
+
+
+
+
+
+    - name: Update Hadoop Java path
+      lineinfile:
+        path: /opt/hadoop/etc/hadoop/hadoop-env.sh
+        regexp: 'export JAVA_HOME'
+        line: export JAVA_HOME=/usr/lib/jvm/jre-11
+
+    - name: Update core-site.xml
+      get_url:
+        url: https://raw.githubusercontent.com/jpclouduk/HDP33/master/config/core-site.xml
+        dest: /opt/hadoop/etc/hadoop/core-site.xml
+
+    - name: Update hdfs-site.xml
+      get_url:
+        url: https://raw.githubusercontent.com/jpclouduk/HDP33/master/config/hdfs-site.xml
+        dest: /opt/hadoop/etc/hadoop/hdfs-site.xml
+
+    - name: Update mapred-site.xml
+      get_url:
+        url: https://raw.githubusercontent.com/jpclouduk/HDP33/master/config/mapred-site.xml
+        dest: /opt/hadoop/etc/hadoop/mapred-site.xml
+
+    - name: Update yarn-site.xml
+      get_url:
+        url: https://raw.githubusercontent.com/jpclouduk/HDP33/master/config/yarn-site.xml
+        dest: /opt/hadoop/etc/hadoop/yarn-site.xml
+
+    - name: Update workers file
+      get_url:
+        url: https://raw.githubusercontent.com/jpclouduk/HDP33/master/config/workers
+        dest: /opt/hadoop/etc/hadoop/workers
+
+    - name: Update spark-defaults.conf file
+      get_url:
+        url: https://raw.githubusercontent.com/jpclouduk/HDP33/master/config/spark-defaults.conf
+        dest: /opt/hadoop/etc/hadoop/workers
+
+    - name: Push hadoop build to workers
+      shell:
+        cmd: scp -r hadoop {{ item }}:/opt/
+        chdir: /opt
+      loop:
+        - node1
+        - node2
+
+
+- hosts: all
+  become: yes
+  tasks:
+
+    - name: Set permissions on hadoop ssh keys
+      file:
+        path: /home/hadoop/.ssh
+        owner: hadoop
+        group: hadoop
+        recurse: yes
+        mode: '0600'
+    
+    - name: Set permissions on hadoop ssh dir
+      file:
+        path: /home/hadoop/.ssh
+        owner: hadoop
+        group: hadoop
+        mode: '0700'
+  
+    - name: Set permissions on hadoop build
+      file:
+        path: /opt/hadoop
+        state: directory
+        owner: hadoop
+        group: hadoop
+        recurse: yes
+
+    - name: Create hadoop data directory
+      file:
+        path: /data
+        state: directory
+        owner: hadoop
+        group: hadoop
+        mode: '0755'
+
+    - name: Setup hadoop PATH
+      lineinfile:
+        path: /home/hadoop/.bashrc
+        regexp: '^PATH='
+        line: PATH=/opt/hadoop/bin:/opt/hadoop/sbin:/opt/spark/bin:$PATH
+
+    - name: Setup HADOOP_HOME
+      lineinfile:
+        path: /home/hadoop/.bashrc
+        regexp: '^HADOOP_HOME='
+        line: HADOOP_HOME=/opt/hadoop
+  
+      - name: Setup SPARK_HOME
+      lineinfile:
+        path: /home/hadoop/.bashrc
+        regexp: '^SPARK_HOME='
+        line: SPARK_HOME=/opt/spark
+  
+      - name: Setup LD_LIBRARY_PATH
+      lineinfile:
+        path: /home/hadoop/.bashrc
+        regexp: '^LD_LIBRARY_PATH='
+        line: LD_LIBRARY_PATH=/opt/hadoop/lib/native:$LD_LIBRARY_PATH
+  
+      - name: Setup HADOOP_CONF_DIR
+      lineinfile:
+        path: /home/hadoop/.bashrc
+        regexp: '^HADOOP_CONF_DIR='
+        line: HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop  
+
+    - name: Setup Export
+      lineinfile:
+        path: /home/hadoop/.bashrc
+        regexp: '^export'
+        line: export PATH HADOOP_HOME SPARK_HOME LD_LIBRARY_PATH HADOOP_CONF_DIR
+
+
+- hosts: master
+  become: yes
+  become_user: hadoop
+  tasks:
+
+    - name: Format hdfs
+      shell:
+        cmd: source /home/hadoop/.bashrc && hdfs namenode -format
+      args:
+        executable: /bin/bash
+
+    - name: Start HDFS
+      shell:
+        cmd: source /home/hadoop/.bashrc && start-dfs.sh
+      args:
+        executable: /bin/bash
+
+    - name: Start YARN
+      shell:
+        cmd: source /home/hadoop/.bashrc && start-yarn.sh
+      args:
+        executable: /bin/bash
+
+    - name: Create hdfs:///user/hadoop
+      shell:
+        cmd: source /home/hadoop/.bashrc && hdfs dfs -mkdir -p /usr/hadoop
+      args:
+        executable: /bin/bash
+
+    - name: Create Spark Log Directory
+      shell:
+        cmd: source /home/hadoop/.bashrc && hdfs dfs -mkdir -p /spark-logs
+      args:
+        executable: /bin/bash
+
+    - name: Start Spark
+      shell:
+        cmd: source /home/hadoop/.bashrc && start-history-server.sh
+      args:
+        executable: /bin/bash
