@@ -239,19 +239,20 @@
         regexp: '^HADOOP_HOME='
         line: HADOOP_HOME=/opt/hadoop
   
-      - name: Setup SPARK_HOME
+     
+    - name: Setup SPARK_HOME
       lineinfile:
         path: /home/hadoop/.bashrc
         regexp: '^SPARK_HOME='
         line: SPARK_HOME=/opt/spark
   
-      - name: Setup LD_LIBRARY_PATH
+    - name: Setup LD_LIBRARY_PATH
       lineinfile:
         path: /home/hadoop/.bashrc
         regexp: '^LD_LIBRARY_PATH='
         line: LD_LIBRARY_PATH=/opt/hadoop/lib/native:$LD_LIBRARY_PATH
   
-      - name: Setup HADOOP_CONF_DIR
+    - name: Setup HADOOP_CONF_DIR
       lineinfile:
         path: /home/hadoop/.bashrc
         regexp: '^HADOOP_CONF_DIR='
